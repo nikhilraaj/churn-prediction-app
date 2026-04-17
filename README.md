@@ -65,7 +65,7 @@ python -m streamlit run app.py
 
 ## 🌐 Live Demo
 
-👉 (Add your Streamlit app link here)
+👉 https://churn-prediction-app-d5bmjlnrkckvdu8ts85r5q.streamlit.app/
 
 ---
 
