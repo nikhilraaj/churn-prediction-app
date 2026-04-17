@@ -6,7 +6,7 @@ from pathlib import Path
 
 import pandas as pd
 import streamlit as st
-from tensorflow.keras.models import load_model
+import joblib
 
 
 ARTIFACTS_DIR = Path(__file__).resolve().parent / "artifacts"
@@ -146,7 +146,7 @@ def load_artifacts():
             f"Missing feature columns file: {FEATURE_COLUMNS_PATH}. Run model.ipynb first."
         )
 
-    model = load_model(MODEL_PATH)
+    model = joblib.load("artifacts/model.pkl")
     with open(SCALER_PATH, "rb") as f:
         scaler = pickle.load(f)
     with open(FEATURE_COLUMNS_PATH, "r", encoding="utf-8") as f:
@@ -234,7 +234,7 @@ if analyze_button:
     processed_row = processed_row.reindex(columns=feature_columns, fill_value=0)
 
     scaled_row = scaler.transform(processed_row)
-    churn_probability = float(model.predict(scaled_row, verbose=0)[0][0])
+    churn_probability = model.predict_proba(scaled_row)[0][1]
     stay_probability = 1.0 - churn_probability
     churn_label = "⚠️ HIGH RISK" if churn_probability >= 0.5 else "✅ LOW RISK"
     risk_class = "risk-high" if churn_probability >= 0.5 else "risk-low"
